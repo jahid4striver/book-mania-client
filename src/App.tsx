@@ -1,10 +1,10 @@
-import './App.css'
+import MainLayout from './layout/MainLayout'
 
 function App() {
 
   return (
-    <div>
-      <h1>hello world</h1>
+    <div className='container w-10/12 mx-auto'>
+      <MainLayout/>
     </div>
   )
 }
