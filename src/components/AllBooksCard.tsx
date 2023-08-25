@@ -3,7 +3,7 @@ import { useGetBooksQuery } from "@/redux/features/books/bookApi";
 import BookCards from "./ui/BookCards";
 import { IBook } from '@/interfaces/bookInterface';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { getAllBooks, getBookByGenre, getBookByYear } from '@/redux/features/books/bookSlice';
+import { getAllBooks, getBookByGenre, getBookByYear, resetFilters } from '@/redux/features/books/bookSlice';
 import { useEffect } from 'react'
 
 const AllBooksCard = () => {
@@ -13,41 +13,54 @@ const AllBooksCard = () => {
     const allbooks: IBook[] | undefined = data?.data;
     const dispatch = useAppDispatch();
     const { books, filteredBooks, isFilter } = useAppSelector((state) => state.bookSlice);
+    const [newYear, setNewYear] = useState('');
+    const [newGenre, setNewGenre] = useState('');
 
 
     useEffect(() => {
         if (allbooks) {
             dispatch(getAllBooks(allbooks))
         }
-    }, [dispatch, allbooks])
+    }, [dispatch, allbooks,newGenre,newYear])
 
-    const uniqueGenres: string[] = [...new Set(allbooks?.map((book) => book.genre))];
-    const uniqueYear: string[] = [...new Set(allbooks?.map((book) => book.publication_date.slice(0, 4)))];
+    const uniqueGenres: string[] = [...new Set((isFilter ? filteredBooks : allbooks)?.map((book) => book.genre) || [])];
+    const uniqueYear: string[] = [...new Set((isFilter ? filteredBooks : allbooks)?.map((book) => book.publication_date.slice(0, 4)) || [])];
 
     const handleSearchResult = (event: ChangeEvent<HTMLInputElement>) => {
         const searchText = event.target.value.toLowerCase();
-        const match = filteredBooks?.filter((book) =>
+        const booksToSearch = isFilter ? filteredBooks : books;
+        const match = booksToSearch?.filter((book) =>
             book.title.toLowerCase().includes(searchText) ||
             book.author.toLowerCase().includes(searchText) ||
             book.genre.toLowerCase().includes(searchText)
         ) ?? [];
         setSearchResult(match);
         setIsSearching(true);
+        setNewGenre('');
+        setNewYear('');
     }
 
     const handleGenreFilter = (event: ChangeEvent<HTMLSelectElement>) => {
         const genre = event.target.value;
-        dispatch(getBookByGenre(genre));
-        setSearchResult([]); // Reset search results
+        dispatch(getBookByGenre({ genre, year: newYear }));
+        setSearchResult([]);
         setIsSearching(false);
+        setNewGenre(genre);
+        setNewYear('');
 
     }
     const handleYearFilter = (event: ChangeEvent<HTMLSelectElement>) => {
-        const genre = event.target.value;
-        dispatch(getBookByYear(genre));
-        setSearchResult([]); // Reset search results
+        const year = event.target.value;
+        dispatch(getBookByYear({ year, genre: newGenre }));
+        setSearchResult([]);
         setIsSearching(false);
+        setNewYear(year);
+        setNewGenre('');
+    }
 
+    const resetFn:any=()=>{
+        dispatch(resetFilters())
+        
     }
 
 
@@ -78,6 +91,7 @@ const AllBooksCard = () => {
                             ))}
                         </select>
                     </div>
+                    <button className='btn btn-xs normal-case text-white btn-error mt-12' onClick={()=>resetFn()}>Reset Filters</button>
                 </div>
                 <div className="form-control w-60 mt-9">
                     <input onChange={handleSearchResult} type="text" placeholder="Search Title/Author/Genre" className="input text-xs input-bordered bg-white input-error w-full max-w-xs" />
