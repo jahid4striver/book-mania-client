@@ -1,6 +1,6 @@
 import Footer from "@/layout/Footer";
-import HomeBooks from "./HomeBooks";
-import HeroSection from "./ui/HeroSection";
+import HomeBooks from "../components/HomeBooks";
+import HeroSection from "../components/ui/HeroSection";
 
 const Home = () => {
     return (

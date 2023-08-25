@@ -8,7 +8,7 @@ const BookCards = ({ data }: any) => {
             {
                 data?.map((book: any) => <div className="card w-full bg-base-100 shadow-xl">
                     <figure className="px-2 pt-2">
-                        <img src={book.image} alt={book.title} className="rounded-xl" />
+                        <img src={book.image} alt={book.title} className="rounded-xl w-28" />
                     </figure>
                     <div className="card-body items-left text-left">
                         <h2 className="card-title">{book.title}</h2>
