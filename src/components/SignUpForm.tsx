@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'; // Replace with the actual package you're using
 import auth from '@/auth/firebase.config';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import signup from '../assets/images/signup.png'
 
 const SignUpForm: React.FC = () => {
@@ -60,6 +60,7 @@ const SignUpForm: React.FC = () => {
             </button>
           </div>
         </form>
+        <h3 className='text-red-600 text-center text-sm font-bold mt-4'>Already Have Account <Link className='text-blue-600' to='/login'>Please Login</Link></h3>
       </div>
     </div>
   );
