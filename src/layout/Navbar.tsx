@@ -15,6 +15,7 @@ const Navbar = () => {
                     <ul className="menu menu-horizontal px-1">
                         <li><Link to='/'>Home</Link></li>
                         <li><Link to='/allbooks'>All Books</Link></li>
+                        <li><Link to='/addnewbook'>Add New Book</Link></li>
                         {!user?.email && <li><Link to='/signup'>Sign Up</Link></li>}
                         {user?.email ? <li><Link onClick={() => signOut(auth)} to=''>Log Out</Link></li> : <li><Link to='/login'>Login</Link></li>}
                     </ul>

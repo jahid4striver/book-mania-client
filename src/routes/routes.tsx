@@ -4,28 +4,36 @@ import Home from '@/pages/Home';
 import AllBooks from '@/pages/AllBooks';
 import SignUp from '@/pages/SignUp';
 import Login from '@/pages/Login';
+import PrivateRoutes from '@/auth/PrivateRoutes';
+import AddNewBook from '@/pages/AddNewBook';
 
 const routes = createBrowserRouter([
     {
         path: '/',
         element: <App />,
-        children:[
+        children: [
             {
-                index:true,
-                element:<Home/>,
+                index: true,
+                element: <Home />,
             },
             {
-                path:'allbooks',
-                element:<AllBooks/>
+                path: 'allbooks',
+                element: <AllBooks />
             },
             {
-                path:'signup',
-                element:<SignUp/>
+                path: 'signup',
+                element: <SignUp />
             },
             {
-                path:'login',
-                element:<Login/>
+                path: 'login',
+                element: <Login />
             },
+            {
+                path: 'addnewbook',
+                element: <PrivateRoutes>
+                    <AddNewBook />
+                </PrivateRoutes>
+            }
         ]
     }
 ]);
