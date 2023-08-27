@@ -2,19 +2,28 @@ import { IBook } from '@/interfaces/bookInterface';
 import { usePostBookMutation } from '@/redux/features/books/bookApi';
 import { FormEvent } from 'react';
 import { toast } from 'react-toastify';
-import {useState,useEffect} from 'react'
+import { useState, useEffect } from 'react'
 
 const NewBookForm = () => {
     const [postBook, { isError, isSuccess }] = usePostBookMutation();
+
+    // For Solving Duplicate Toast on success and error
     const [showSuccessToast, setShowSuccessToast] = useState(false);
+    const [showErrorToast, setShowErrorToast] = useState(false);
 
     useEffect(() => {
         if (isSuccess) {
             setShowSuccessToast(true);
         }
-    }, [isSuccess])
+    }, [isSuccess]);
 
-    const handleAddBook = (e: FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        if (isError) {
+            setShowErrorToast(true);
+        }
+    }, [isError]);
+
+    function handleAddBook(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const title = form.title?.value;
@@ -25,7 +34,7 @@ const NewBookForm = () => {
 
         const bookData: IBook = { title, author, genre, publication_date, image };
         postBook(bookData);
-        form.reset()
+        form.reset();
 
     }
 
@@ -35,11 +44,13 @@ const NewBookForm = () => {
             setShowSuccessToast(false);
         }
     }, [showSuccessToast]);
-    
 
-    if (isError) {
-        return toast.error("Book Added Failed")
-    }
+    useEffect(() => {
+        if (showErrorToast) {
+            toast.error('Book Added Failed');
+            setShowErrorToast(false);
+        }
+    }, [showErrorToast]);
 
 
     return (

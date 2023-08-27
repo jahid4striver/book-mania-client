@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const BookCards = ({ data }: any) => {
+const BookDetailsCard = ({ data }: any) => {
     const navigate=useNavigate();
     console.log(data);
 
@@ -22,4 +22,4 @@ const BookCards = ({ data }: any) => {
     );
 };
 
-export default BookCards;
+export default BookDetailsCard;
