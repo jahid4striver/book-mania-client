@@ -19,4 +19,4 @@ const bookApi = api.injectEndpoints({
     })
 });
 
-export const { useGetBooksQuery, usePostBookMutation } = bookApi;
+export const { useGetBooksQuery, useGetSingleBookQuery,usePostBookMutation } = bookApi;

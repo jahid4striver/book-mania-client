@@ -1,11 +1,18 @@
-import React from 'react';
+import BookDetailsCard from '@/components/BookDetailsCard';
+import { useGetSingleBookQuery } from '@/redux/features/books/bookApi';
 import { useParams } from 'react-router-dom';
 
 const BookDetails = () => {
-    const { id } = useParams()
+    const { id } = useParams();
+    const { data,isLoading } = useGetSingleBookQuery(id);
+
+    if(isLoading){
+        return <p>Loading.....</p>
+    }
+    console.log(data);
     return (
         <div>
-            <h1>Detils of {id}</h1>
+            <BookDetailsCard data={data} />
         </div>
     );
 };
