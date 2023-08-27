@@ -3,13 +3,12 @@ import { useUpdateBookMutation } from '@/redux/features/books/bookApi';
 import { FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateBook = (data: any) => {
     const book = data?.data;
     const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname ||'/allbooks';
+
 
     const [updateBook, { isError, isSuccess }] = useUpdateBookMutation();
 
@@ -41,7 +40,7 @@ const UpdateBook = (data: any) => {
         const bookData: IBook = { title, author, genre, publication_date, image };
         updateBook({ data: bookData, id: book._id });
         form.reset();
-        
+
 
     }
 
@@ -49,7 +48,7 @@ const UpdateBook = (data: any) => {
         if (showSuccessToast) {
             toast.success('Book Updated Successful');
             setShowSuccessToast(false);
-            navigate(from, { replace: true });
+            navigate(`/bookdetails/${book._id}`);
         }
     }, [showSuccessToast]);
 

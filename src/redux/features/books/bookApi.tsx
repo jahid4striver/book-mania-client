@@ -3,12 +3,6 @@ import api from "@/redux/api/apiSlice";
 
 const bookApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getBooks: builder.query({
-            query: () => '/books'
-        }),
-        getSingleBook: builder.query({
-            query: (id) => `/book/${id}`
-        }),
         postBook: builder.mutation({
             query: (data) => ({
                 url: '/book',
@@ -21,8 +15,17 @@ const bookApi = api.injectEndpoints({
                 url: `/book/${id}`,
                 method: 'PUT',
                 body: data,
-            })
-        })
+            }),
+            invalidatesTags: ['updatebook']
+        }),
+        getBooks: builder.query({
+            query: () => '/books',
+            providesTags:['updatebook']
+        }),
+        getSingleBook: builder.query({
+            query: (id) => `/book/${id}`,
+            providesTags: ['updatebook']
+        }),
     })
 });
 
