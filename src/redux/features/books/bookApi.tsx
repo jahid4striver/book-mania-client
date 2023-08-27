@@ -20,10 +20,10 @@ const bookApi = api.injectEndpoints({
             query: ({ data, id }) => ({
                 url: `/book/${id}`,
                 method: 'PUT',
-                body: data
+                body: data,
             })
         })
     })
 });
 
-export const { useGetBooksQuery, useGetSingleBookQuery, usePostBookMutation } = bookApi;
+export const { useGetBooksQuery, useGetSingleBookQuery, usePostBookMutation, useUpdateBookMutation } = bookApi;

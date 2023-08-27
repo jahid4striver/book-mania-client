@@ -1,13 +1,17 @@
 import { IBook } from '@/interfaces/bookInterface';
-import { usePostBookMutation } from '@/redux/features/books/bookApi';
+import { useUpdateBookMutation } from '@/redux/features/books/bookApi';
 import { FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const UpdateBook = (data:any) => {
+const UpdateBook = (data: any) => {
     const book = data?.data;
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname ||'/allbooks';
 
-    const [postBook, { isError, isSuccess }] = usePostBookMutation();
+    const [updateBook, { isError, isSuccess }] = useUpdateBookMutation();
 
     // For Solving Duplicate Toast on success and error
     const [showSuccessToast, setShowSuccessToast] = useState(false);
@@ -25,7 +29,7 @@ const UpdateBook = (data:any) => {
         }
     }, [isError]);
 
-    function handleAddBook(e: FormEvent<HTMLFormElement>) {
+    function handleUpdateBook(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const title = form.title?.value;
@@ -35,21 +39,23 @@ const UpdateBook = (data:any) => {
         const image = form.image?.value;
 
         const bookData: IBook = { title, author, genre, publication_date, image };
-        postBook(bookData);
+        updateBook({ data: bookData, id: book._id });
         form.reset();
+        
 
     }
 
     useEffect(() => {
         if (showSuccessToast) {
-            toast.success('Book Added Successful');
+            toast.success('Book Updated Successful');
             setShowSuccessToast(false);
+            navigate(from, { replace: true });
         }
     }, [showSuccessToast]);
 
     useEffect(() => {
         if (showErrorToast) {
-            toast.error('Book Added Failed');
+            toast.error('Book Updated Failed');
             setShowErrorToast(false);
         }
     }, [showErrorToast]);
@@ -57,7 +63,7 @@ const UpdateBook = (data:any) => {
 
     return (
         <div>
-            <form onSubmit={handleAddBook} className='mt-4 flex justify-center items-center flex-col'>
+            <form onSubmit={handleUpdateBook} className='mt-4 flex justify-center items-center flex-col'>
                 <div className="form-control w-80">
                     <label className="label">
                         <span className="label-text">Book Title</span>

@@ -9,7 +9,7 @@ const BookDetailsCard = (data: any) => {
             <div className=" bg-base-100 shadow-xl p-5 flex flex-row justify-center items-center">
                 <div className="mx-auto">
                     <figure className="px-2 pt-2">
-                        <img src={book?.image} alt={book?.title} className="rounded-xl  w-80" />
+                        <img src={book?.image} alt={book?.title} className="rounded-xl  w-60" />
                     </figure>
                 </div>
                 <div className="mx-auto">
