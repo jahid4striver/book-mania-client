@@ -1,61 +1,50 @@
 import { IBook } from '@/interfaces/bookInterface';
-import { useState } from 'react';
+import { usePostBookMutation } from '@/redux/features/books/bookApi';
+import { FormEvent } from 'react';
 import { toast } from 'react-toastify';
+import {useState,useEffect} from 'react'
 
 const NewBookForm = () => {
-    const [id, setId] = useState('');
+    const [postBook, { isError, isSuccess }] = usePostBookMutation();
+    const [showSuccessToast, setShowSuccessToast] = useState(false);
 
-    function guardarArchivo(e: React.ChangeEvent<HTMLInputElement>) {
-        var file = e.target.files[0] //the file
-        var reader = new FileReader() //this for convert to Base64 
-        reader.readAsDataURL(e.target.files[0]) //start conversion...
-        reader.onload = function (e) { //.. once finished..
-            var rawLog = (reader.result as string)?.split(',')[1];
-            var dataSend = { dataReq: { data: rawLog, name: file.name, type: file.type }, fname: "uploadFilesToGoogleDrive" }; //preapre info to send to API
-            fetch('https://script.google.com/macros/s/AKfycbwYKgy85mYgpiT7U3mV2T6vum0yKg_I-AAJegLuNfeosEO_HligOW_ic_M1mW8pUqk/exec', //your AppsScript URL
-                { method: "POST", body: JSON.stringify(dataSend) }) //send to Api
-                .then(res => res.json()).then((a) => {
-                    if (a.id) {
-                        toast.success("Image Uploaded")
-                        setId(a.id)
-
-                    }
-                }).catch(e => console.log(e)) // Or Error in console
+    useEffect(() => {
+        if (isSuccess) {
+            setShowSuccessToast(true);
         }
+    }, [isSuccess])
+
+    const handleAddBook = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const title = form.title?.value;
+        const author = form.author?.value;
+        const genre = form.genre?.value;
+        const publication_date = form.publication_date?.value;
+        const image = form.image?.value;
+
+        const bookData: IBook = { title, author, genre, publication_date, image };
+        postBook(bookData);
+        form.reset()
+
     }
 
+    useEffect(() => {
+        if (showSuccessToast) {
+            toast.success('Book Added Successful');
+            setShowSuccessToast(false);
+        }
+    }, [showSuccessToast]);
+    
 
-    const handleAddBook = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const title = e.target.title.value;
-        const author = e.target.author.value;
-        const genre = e.target.genre.value;
-        const publication_date = e.target.publication_date.value;
-
-        const image = `https://docs.google.com/uc?export=download&id=${id}`;
-        const bookData:IBook = { title, author, genre, publication_date, image };
-
-
-        fetch('https://madrumi.clearsoftwares.xyz/books', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(bookData)
-
-        })
-            .then(res => res.json())
-            .then(data => {
-                toast.success("Book Added Successful");
-                console.log(data);
-                e.target.reset();
-            })
+    if (isError) {
+        return toast.error("Book Added Failed")
     }
 
 
     return (
         <div>
-            <form onSubmit={handleAddBook} className='mt-8 flex justify-center items-center flex-col'>
+            <form onSubmit={handleAddBook} className='mt-4 flex justify-center items-center flex-col'>
                 <div className="form-control w-80">
                     <label className="label">
                         <span className="label-text">Book Title</span>
@@ -73,7 +62,8 @@ const NewBookForm = () => {
                         <span className="label-text">Genre</span>
                     </label>
                     <input name='genre' type="text" placeholder="Type Book Genre" className="input input-bordered w-full max-w-xs" />
-                </div><div className="form-control w-80">
+                </div>
+                <div className="form-control w-80">
                     <label className="label">
                         <span className="label-text">Publication Date</span>
                     </label>
@@ -81,11 +71,11 @@ const NewBookForm = () => {
                 </div>
                 <div className="form-control w-80">
                     <label className="label">
-                        <span className="label-text">Book Cover Image</span>
+                        <span className="label-text">Image Link</span>
                     </label>
-                    <input type="file" id="customFile" placeholder="Image File" onChange={(e) => guardarArchivo(e)} />
+                    <input name='image' type="text" placeholder="Enter Image Link Here" className="input input-bordered w-full max-w-xs" />
                 </div>
-                <button disabled={!id} className='btn btn-md btn-accent text-white my-4 rounded-md' type='submit'>Add Book</button>
+                <button className='btn btn-md btn-error text-white my-4 rounded-md' type='submit'>Add Book</button>
             </form>
         </div>
     );
