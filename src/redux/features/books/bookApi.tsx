@@ -22,15 +22,16 @@ const bookApi = api.injectEndpoints({
             query:(id)=>({
                 url:`/book/${id}`,
                 method:'DELETE',
-            })
+            }),
+            invalidatesTags:['deletebook']
         }),
         getBooks: builder.query({
             query: () => '/books',
-            providesTags:['updatebook']
+            providesTags:['updatebook','deletebook']
         }),
         getSingleBook: builder.query({
             query: (id) => `/book/${id}`,
-            providesTags: ['updatebook']
+            providesTags: ['updatebook','deletebook']
         }),
     })
 });
