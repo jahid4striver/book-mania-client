@@ -18,23 +18,31 @@ const bookApi = api.injectEndpoints({
             }),
             invalidatesTags: ['updatebook']
         }),
-        deleteBook:builder.mutation({
-            query:(id)=>({
-                url:`/book/${id}`,
-                method:'DELETE',
+        deleteBook: builder.mutation({
+            query: (id) => ({
+                url: `/book/${id}`,
+                method: 'DELETE',
             }),
-            invalidatesTags:['deletebook']
+            invalidatesTags: ['deletebook']
+        }),
+        postReview: builder.mutation({
+            query: ({ id, review }) => ({
+                url: `/review/${id}`,
+                method: 'POST',
+                body: review,
+            }),
+            invalidatesTags:['postreview']
         }),
         getBooks: builder.query({
             query: () => '/books',
-            providesTags:['updatebook','deletebook']
+            providesTags: ['updatebook', 'deletebook','postreview']
         }),
         getSingleBook: builder.query({
             query: (id) => `/book/${id}`,
-            providesTags: ['updatebook','deletebook']
+            providesTags: ['updatebook', 'deletebook','postreview']
         }),
     })
 });
 
 export const { useGetBooksQuery, useGetSingleBookQuery, usePostBookMutation,
-    useDeleteBookMutation, useUpdateBookMutation } = bookApi;
+    useDeleteBookMutation, useUpdateBookMutation,usePostReviewMutation } = bookApi;
