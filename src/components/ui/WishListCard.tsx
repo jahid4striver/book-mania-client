@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const BookCards = ({ data }: any) => {
+const WishListCard = ({ data }: any) => {
     const [postWishlist, { isSuccess }] = usePostWishlistMutation()
     const [user] = useAuthState(auth)
     const navigate = useNavigate();
@@ -38,4 +38,4 @@ const BookCards = ({ data }: any) => {
     );
 };
 
-export default BookCards;
+export default WishListCard;

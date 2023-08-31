@@ -31,18 +31,26 @@ const bookApi = api.injectEndpoints({
                 method: 'POST',
                 body: review,
             }),
-            invalidatesTags:['postreview']
+            invalidatesTags: ['postreview']
+        }),
+        postWishlist: builder.mutation({
+            query: (data) => ({
+                url: `/wishlist`,
+                method: 'POST',
+                body: data,
+            })
         }),
         getBooks: builder.query({
             query: () => '/books',
-            providesTags: ['updatebook', 'deletebook','postreview']
+            providesTags: ['updatebook', 'deletebook', 'postreview']
         }),
         getSingleBook: builder.query({
             query: (id) => `/book/${id}`,
-            providesTags: ['updatebook', 'deletebook','postreview']
+            providesTags: ['updatebook', 'deletebook', 'postreview']
         }),
     })
 });
 
 export const { useGetBooksQuery, useGetSingleBookQuery, usePostBookMutation,
-    useDeleteBookMutation, useUpdateBookMutation,usePostReviewMutation } = bookApi;
+    useDeleteBookMutation, useUpdateBookMutation, usePostReviewMutation,
+    usePostWishlistMutation } = bookApi;
