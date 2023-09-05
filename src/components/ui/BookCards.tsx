@@ -1,23 +1,62 @@
 import auth from '@/auth/firebase.config';
-import { usePostWishlistMutation } from '@/redux/features/books/bookApi';
+import { IBook } from '@/interfaces/bookInterface';
+import { useGetWishlistQuery, usePostWishlistMutation } from '@/redux/features/books/bookApi';
+import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const BookCards = ({ data }: any) => {
-    const [postWishlist, { isSuccess }] = usePostWishlistMutation()
+    const [postWishlist, { isSuccess, isError }] = usePostWishlistMutation();
+    const {data:wishlist}=useGetWishlistQuery(undefined);
     const [user] = useAuthState(auth)
     const navigate = useNavigate();
-    console.log(data);
+    
+    console.log(wishlist);
+    
+    const [showSuccessToast, setShowSuccessToast] = useState(false);
+    const [showErrorToast, setShowErrorToast] = useState(false);
 
-    const handleAddToWishlist = (book: object) => {
-        const userEmail = user?.email;
-        postWishlist({ user: userEmail, ...book });
-
+    useEffect(() => {
         if (isSuccess) {
-            toast.success('Added To Wishlist')
+            setShowSuccessToast(true);
         }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        if (isError) {
+            setShowErrorToast(true);
+        }
+    }, [isError]);
+
+    const handleAddToWishlist = (book: IBook) => {
+        const userEmail = user?.email;
+        const filter=wishlist?.data.filter((wl:IBook)=>wl.title===book.title&&wl.user===userEmail);
+        console.log(filter);
+        if(filter.length){
+            setShowErrorToast(true);
+        }else{
+            const {title,author,genre,publication_date,image}= book;
+            postWishlist({ user: userEmail,title,author,genre,publication_date,image}); 
+        }
+
+
+        
     }
+
+    useEffect(() => {
+        if (showSuccessToast) {
+            toast.success('Book Added To Wishlist');
+            setShowSuccessToast(false);
+        }
+    }, [showSuccessToast]);
+
+    useEffect(() => {
+        if (showErrorToast) {
+            toast.error('Book Already Added In Wishlist');
+            setShowErrorToast(false);
+        }
+    }, [showErrorToast]);
 
     return (
         <>

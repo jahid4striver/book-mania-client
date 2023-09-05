@@ -1,10 +1,19 @@
-import React from 'react';
+import auth from '@/auth/firebase.config';
+import WishListCard from '@/components/ui/WishListCard';
+import { IBook } from '@/interfaces/bookInterface';
+import { useGetWishlistQuery } from '@/redux/features/books/bookApi';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const MyWishList = () => {
+const [user]=useAuthState(auth)
+const {data}=useGetWishlistQuery(undefined);
+const wishlist=data?.data.filter((wl:IBook)=>wl.user===user?.email)
+
+
     return (
         <div>
-            <h1>My WishList</h1>
-            
+            <h1 className="text-xl text-center my-4">My Wishlist</h1>
+            <WishListCard wishlist={wishlist}/>
         </div>
     );
 };

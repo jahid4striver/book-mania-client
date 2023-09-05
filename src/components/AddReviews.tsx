@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 
 const AddReviews: React.FC = () => {
     const { id } = useParams();
-    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { } } = useForm();
     const [user] = useAuthState(auth);
     const [postReview] = usePostReviewMutation()
 
