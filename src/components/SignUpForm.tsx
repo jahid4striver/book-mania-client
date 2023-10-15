@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'; // Replace with the actual package you're using
 import auth from '@/auth/firebase.config';
@@ -6,8 +5,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import signup from '../assets/images/signup.png'
 
 const SignUpForm: React.FC = () => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const [createUserWithEmailAndPassword, user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
 
   const navigate = useNavigate();
   const location = useLocation();

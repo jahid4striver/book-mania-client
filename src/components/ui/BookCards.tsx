@@ -5,14 +5,14 @@ import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Loader from './Loader';
 
 const BookCards = ({ data }: any) => {
     const [postWishlist, { isSuccess, isError }] = usePostWishlistMutation();
-    const {data:wishlist}=useGetWishlistQuery(undefined);
+    const {data:wishlist, isLoading}=useGetWishlistQuery(undefined);
     const [user] = useAuthState(auth)
     const navigate = useNavigate();
     
-    console.log(wishlist);
     
     const [showSuccessToast, setShowSuccessToast] = useState(false);
     const [showErrorToast, setShowErrorToast] = useState(false);
@@ -33,7 +33,7 @@ const BookCards = ({ data }: any) => {
         const userEmail = user?.email;
         const filter=wishlist?.data.filter((wl:IBook)=>wl.title===book.title&&wl.user===userEmail);
         console.log(filter);
-        if(filter.length){
+        if(filter?.length){
             setShowErrorToast(true);
         }else{
             const {title,author,genre,publication_date,image}= book;
@@ -58,6 +58,11 @@ const BookCards = ({ data }: any) => {
         }
     }, [showErrorToast]);
 
+
+    if(isLoading){
+        return <Loader/>
+    }
+
     return (
         <>
             {
@@ -70,7 +75,7 @@ const BookCards = ({ data }: any) => {
                         <p>Author: {book.author}</p>
                         <p>Publication Date: {book.publication_date}</p>
                         <p>Genre: {book.genre}</p>
-                        <button onClick={() => handleAddToWishlist(book)} className='btn btn-xs btn-error text-white'>Add To Wishlist</button>
+                        {user?.email&&<button onClick={() => handleAddToWishlist(book)} className='btn btn-xs btn-error text-white'>Add To Wishlist</button>}
                     </div>
                 </div>)
             }</>

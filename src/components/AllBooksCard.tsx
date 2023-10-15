@@ -5,11 +5,12 @@ import { IBook } from '@/interfaces/bookInterface';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { getAllBooks, getBookByGenre, getBookByYear, resetFilters } from '@/redux/features/books/bookSlice';
 import { useEffect } from 'react'
+import Loader from './ui/Loader';
 
 const AllBooksCard = () => {
     const [searchResult, setSearchResult] = useState<IBook[]>([]);
     const [isSearching, setIsSearching] = useState(false);
-    const { data } = useGetBooksQuery(undefined);
+    const { data,isLoading } = useGetBooksQuery(undefined);
     const allbooks: IBook[] | undefined = data?.data;
     const dispatch = useAppDispatch();
     const { books, filteredBooks, isFilter } = useAppSelector((state) => state.bookSlice);
@@ -63,6 +64,9 @@ const AllBooksCard = () => {
         
     }
 
+    if(isLoading){
+        return <Loader/>
+    }
 
     return (
         <div>

@@ -1,3 +1,4 @@
+import Loader from "@/components/ui/Loader";
 import UpdateBook from "@/components/UpdateBook";
 import { useGetSingleBookQuery } from "@/redux/features/books/bookApi";
 import { useParams } from "react-router-dom";
@@ -7,7 +8,7 @@ const EditBook = () => {
     const { data, isLoading } = useGetSingleBookQuery(id);
 
     if (isLoading) {
-        return <p>Loading.....</p>
+        return <Loader/>
     }
 
     return (
